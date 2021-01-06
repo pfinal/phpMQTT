@@ -36,7 +36,7 @@ namespace Bluerhinos;
 
 /* phpMQTT */
 
-class phpMQTT
+class MQTT
 {
     protected $socket;            /* holds the socket	*/
     protected $msgid = 1;            /* counter for message id */
@@ -90,7 +90,7 @@ class phpMQTT
      * @param $clientid
      * @param null $cafile
      */
-    public function broker($address, $port, $clientid, $cafile = null): void
+    public function broker($address, $port, $clientid, $cafile = null)
     {
         $this->address = $address;
         $this->port = $port;
@@ -108,7 +108,7 @@ class phpMQTT
      *
      * @return bool
      */
-    public function connect_auto($clean = true, $will = null, $username = null, $password = null): bool
+    public function connect_auto($clean = true, $will = null, $username = null, $password = null)
     {
         while ($this->connect($clean, $will, $username, $password) === false) {
             sleep(10);
@@ -124,7 +124,7 @@ class phpMQTT
      *
      * @return bool
      */
-    public function connect($clean = true, $will = null, $username = null, $password = null): bool
+    public function connect($clean = true, $will = null, $username = null, $password = null)
     {
         if ($will) {
             $this->will = $will;
@@ -291,7 +291,7 @@ class phpMQTT
      *
      * @return string
      */
-    public function subscribeAndWaitForMessage($topic, $qos): string
+    public function subscribeAndWaitForMessage($topic, $qos)
     {
         $this->subscribe(
             [
@@ -315,7 +315,7 @@ class phpMQTT
      * @param $topics
      * @param int $qos
      */
-    public function subscribe($topics, $qos = 0): void
+    public function subscribe($topics, $qos = 0)
     {
         $i = 0;
         $buffer = '';
@@ -350,7 +350,7 @@ class phpMQTT
     /**
      * Sends a keep alive ping
      */
-    public function ping(): void
+    public function ping()
     {
         $head = chr(0xc0);
         $head .= chr(0x00);
@@ -362,7 +362,7 @@ class phpMQTT
     /**
      *  sends a proper disconnect cmd
      */
-    public function disconnect(): void
+    public function disconnect()
     {
         $head = ' ';
         $head{0} = chr(0xe0);
@@ -373,7 +373,7 @@ class phpMQTT
     /**
      * Sends a proper disconnect, then closes the socket
      */
-    public function close(): void
+    public function close()
     {
         $this->disconnect();
         stream_socket_shutdown($this->socket, STREAM_SHUT_WR);
@@ -387,7 +387,7 @@ class phpMQTT
      * @param int $qos
      * @param bool $retain
      */
-    public function publish($topic, $content, $qos = 0, $retain = false): void
+    public function publish($topic, $content, $qos = 0, $retain = false)
     {
         $i = 0;
         $buffer = '';
@@ -481,7 +481,7 @@ class phpMQTT
                 if (is_callable($top['function'])) {
                     call_user_func($top['function'], $topic, $msg);
                 } else {
-                    $this->_errorMessage('Message received on topic ' . $topic. ' but function is not callable.');
+                    $this->_errorMessage('Message received on topic ' . $topic . ' but function is not callable.');
                 }
             }
         }
@@ -502,7 +502,7 @@ class phpMQTT
      *
      * @return bool | string
      */
-    public function proc(bool $loop = true)
+    public function proc($loop = true)
     {
         if (feof($this->socket)) {
             $this->_debugMessage('eof receive going to reconnect for good measure');
@@ -597,7 +597,7 @@ class phpMQTT
      *
      * @return string
      */
-    protected function setmsglength($len): string
+    protected function setmsglength($len)
     {
         $string = '';
         do {
@@ -618,7 +618,7 @@ class phpMQTT
      *
      * @return string
      */
-    protected function strwritestring($str, &$i): string
+    protected function strwritestring($str, &$i)
     {
         $len = strlen($str);
         $msb = $len >> 8;
@@ -635,7 +635,7 @@ class phpMQTT
      *
      * @param $string
      */
-    public function printstr($string): void
+    public function printstr($string)
     {
         $strlen = strlen($string);
         for ($j = 0; $j < $strlen; $j++) {
@@ -652,7 +652,7 @@ class phpMQTT
     /**
      * @param string $message
      */
-    protected function _debugMessage(string $message): void
+    protected function _debugMessage($message)
     {
         if ($this->debug === true) {
             echo date('r: ') . $message . PHP_EOL;
@@ -662,7 +662,7 @@ class phpMQTT
     /**
      * @param string $message
      */
-    protected function _errorMessage(string $message): void
+    protected function _errorMessage($message)
     {
         error_log('Error:' . $message);
     }
